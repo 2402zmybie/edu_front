@@ -8,10 +8,17 @@ export default {
       data: searchObj
     })
   },
-  //查询所有分列  
+  //查询所有分列
   getAllSubject() {
     return request({
       url: `/eduservice/edu-subject/getAllSubject`,
+      method: 'get'
+    })
+  },
+  //课程详情
+  getCourseInfo(courseId) {
+    return request({
+      url: `/eduservice/coursefront/getFrontCourseInfo/${courseId}`,
       method: 'get'
     })
   }
