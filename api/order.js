@@ -13,5 +13,18 @@ export default {
       url: `/eduorder/order/getOrderInfo/${orderId}`,
       method: 'get'
     })
+  },
+  //生成二维码方法
+  createNative(orderNo) {
+    return request({
+      url: `/eduorder/paylog/createNative/${orderNo}`,
+      method: 'get'
+    })
+  },
+  queryPayStatus(orderNo) {
+    return request({
+      url: `/eduorder/paylog/queryPayStatus/${orderNo}`,
+      method: 'get'
+    })
   }
 }

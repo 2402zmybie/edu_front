@@ -76,9 +76,14 @@ export default {
   asyncData({params, error}) {
     return ordersApi.getOrderInfo(params.oid).then(res=> {
       return {
-        order: res.data.data.item
+        order: res.data.data.item,
       }
     })
+  },
+  methods:{
+    toPay() {
+      this.$router.push({path: '/pay/' + this.order.orderNo})
+    }
   }
 }
 </script>

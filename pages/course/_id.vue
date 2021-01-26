@@ -21,8 +21,8 @@
               <span class="c-fff fsize24">{{courseWebVo.title}}</span>
             </h2>
             <section class="c-attr-jg">
-              <span class="c-fff">价格：{{courseWebVo.price}}</span>
-              <b class="c-yellow" style="font-size:24px;">￥0.00</b>
+              <span class="c-fff">价格：</span>
+              <b class="c-yellow" style="font-size:24px;">￥{{courseWebVo.price}}</b>
             </section>
             <section class="c-attr-mt c-attr-undis">
               <span class="c-fff fsize14">主讲： {{courseWebVo.teacherName}}&nbsp;&nbsp;&nbsp;</span>
@@ -33,7 +33,10 @@
                 <a class="c-fff vam" title="收藏" href="#" >收藏</a>
               </span>
             </section>
-            <section class="c-attr-mt">
+            <section class="c-attr-mt" v-if="isBuy || Number(courseWebVo.price) === 0">
+              <a href="#" title="立即观看" class="comm-btn c-btn-3" @click="createOrders()">立即观看</a>
+            </section>
+            <section class="c-attr-mt" v-else>
               <a href="#" title="立即购买" class="comm-btn c-btn-3" @click="createOrders()">立即购买</a>
             </section>
           </section>
@@ -163,20 +166,29 @@
 import courseApi from '@/api/course.js'
 import ordersApi from '@/api/order.js'
 export default {
-  asyncData({params, error}) {
-    return courseApi.getCourseInfo(params.id).then(res=> {
-      return {
-        courseId: params.id,
-        courseWebVo: res.data.data.courseWebVo,
-        chapterVideoList: res.data.data.chapterVideoList
-      }
-    })
+  data() {
+    return {
+      chapterVideoList: [],
+      isBuy:false,
+      courseWebVo:{},
+      courseId: ''
+    }
+  },
+  created() {
+    this.courseId = this.$route.params.id
+    this.initCourseInfo()
   },
   methods:{
+    //查询课程详细信息
+    initCourseInfo() {
+      courseApi.getCourseInfo(this.courseId).then(res=> {
+          this.courseWebVo = res.data.data.courseWebVo
+          this.chapterVideoList = res.data.data.chapterVideoList
+          this.isBuy = res.data.data.isBuy
+      })
+    },
     createOrders() {
       ordersApi.createOrders(this.courseId).then(res=> {
-        //获取返回的订单号
-       
         //生成订单之后,跳转到订单显示页面
         this.$router.push({path: '/orders/' +  res.data.data.orderId})
       })
